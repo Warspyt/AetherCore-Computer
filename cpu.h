@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// Definir tamaño de la memoria
-#define MEM_SIZE 1024
+// Definir tamaño de la memoria (1 MB)
+#define MEM_SIZE 1024 * 1024
 
 // Opcodes
 #define OPCODE_LOADI 0x01
