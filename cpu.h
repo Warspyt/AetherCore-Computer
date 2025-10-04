@@ -10,9 +10,20 @@
 // Opcodes
 #define OPCODE_LOADI 0x01
 #define OPCODE_MOV   0x02
-#define OPCODE_ADD   0x05
-#define OPCODE_SUB   0x06
-#define OPCODE_HALT  0x11
+// Arithmetic and logic operations with integers
+#define OPCODE_ADD   0x10
+#define OPCODE_SUB   0x11
+#define OPCODE_MULT  0x12 // Not implemented yet
+#define OPCODE_DIV   0x13 // Not implemented yet
+// Arithmetic operations with floats
+#define OPCODE_ADDF  0x20 // Not implemented yet
+#define OPCODE_SUBF  0x21 // Not implemented yet
+#define OPCODE_MULTF 0x22 // Not implemented yet
+#define OPCODE_DIVF  0x23 // Not implemented yet
+// Branch instructions
+#define OPCODE_BRNEG 0x30
+
+#define OPCODE_HALT  0xFF
 
 // CPU
 typedef struct {
