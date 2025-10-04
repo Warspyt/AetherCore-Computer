@@ -48,11 +48,11 @@ void run(CPU *cpu, uint8_t *MEM) {
         }
 
         // Mostrar estado de la CPU
-        printf("PC=%llu | R0=%llu R1=%llu R2=%llu | Z=%d N=%d C=%d V=%d\n",
-               (unsigned long long)cpu->PC,
-               (unsigned long long)cpu->REG[0],
-               (unsigned long long)cpu->REG[1],
-               (unsigned long long)cpu->REG[2],
+        printf("PC=%llu | R0=%lld R1=%lld R2=%lld | Z=%d N=%d C=%d V=%d\n",
+               (long long)cpu->PC,
+               (long long)cpu->REG[0],
+               (long long)cpu->REG[1],
+               (long long)cpu->REG[2],
                (int)read_flag(cpu, ZERO_FLAG),
                (int)read_flag(cpu, NEGATIVE_FLAG),
                (int)read_flag(cpu, CARRY_FLAG),

@@ -16,7 +16,7 @@
 
 // CPU
 typedef struct {
-    uint64_t REG[32];  // Registros R0..R31
+    int64_t REG[32];  // Registros R0..R31
     uint64_t PC;       // Program Counter
     uint64_t IR;       // Instruction Register
     uint8_t FLAGS;    // Z, N, C, V
