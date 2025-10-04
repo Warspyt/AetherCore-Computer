@@ -22,6 +22,11 @@ uint64_t assemble_line(char *line) {
         else if (strcmp(instr, "MOV") == 0)
             return make_instr_R(OPCODE_MOV, rd, imm, 0);
     }
+    else if (sscanf(line, "%s %d", instr, &imm) == 2) {
+        if (strcmp(instr, "BRNEG") == 0) {
+            return make_instr_B(OPCODE_BRNEG, imm);
+        }
+    }
     else if (sscanf(line, "%s", instr) == 1) {
         if (strcmp(instr, "HALT") == 0)
             return make_instr_I(OPCODE_HALT, 0, 0);

@@ -10,9 +10,20 @@
 // Opcodes
 #define OPCODE_LOADI 0x01
 #define OPCODE_MOV   0x02
-#define OPCODE_ADD   0x05
-#define OPCODE_SUB   0x06
-#define OPCODE_HALT  0x11
+// Arithmetic and logic operations with integers
+#define OPCODE_ADD   0x10
+#define OPCODE_SUB   0x11
+#define OPCODE_MULT  0x12 // Not implemented yet
+#define OPCODE_DIV   0x13 // Not implemented yet
+// Arithmetic operations with floats
+#define OPCODE_ADDF  0x20 // Not implemented yet
+#define OPCODE_SUBF  0x21 // Not implemented yet
+#define OPCODE_MULTF 0x22 // Not implemented yet
+#define OPCODE_DIVF  0x23 // Not implemented yet
+// Branch instructions
+#define OPCODE_BRNEG 0x30
+
+#define OPCODE_HALT  0xFF
 
 // CPU
 typedef struct {
@@ -34,6 +45,7 @@ enum CPU_FLAG {
 void run(CPU *cpu, uint8_t *MEM);
 uint64_t make_instr_I(uint16_t opcode, uint8_t rd, uint32_t imm);
 uint64_t make_instr_R(uint16_t opcode, uint8_t rd, uint8_t rs, uint8_t rt);
+uint64_t make_instr_B(uint16_t opcode, uint32_t imm);
 bool read_flag(CPU *cpu, enum CPU_FLAG f);
 void set_flag(CPU *cpu, enum CPU_FLAG f);
 void reset_flags(CPU *cpu);

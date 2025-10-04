@@ -39,6 +39,13 @@ void run(CPU *cpu, uint8_t *MEM) {
                 }
 
                 break;
+            case OPCODE_BRNEG:
+                // TODO: add error handling in case the PC ends in an invalid memory address (negative or bigger than
+                // the machine's memory)
+                if (read_flag(cpu, NEGATIVE_FLAG)) {
+                    cpu->PC += 8 * imm;
+                }
+                break;
             case OPCODE_HALT:
                 printf("HALT alcanzado.\n");
                 return;
@@ -76,6 +83,14 @@ uint64_t make_instr_R(uint16_t opcode, uint8_t rd, uint8_t rs, uint8_t rt) {
     instr |= ((uint64_t)rd & 0x1F) << 49;
     instr |= ((uint64_t)rs & 0x1F) << 44;
     instr |= ((uint64_t)rt & 0x1F) << 39;
+    return instr;
+}
+
+// Type B instructions (branches)
+uint64_t make_instr_B(uint16_t opcode, uint32_t imm) {
+    uint64_t instr = 0;
+    instr |= ((uint64_t)opcode & 0x3FF) << 54;
+    instr |= ((uint64_t)imm & 0xFFFFFFFF);
     return instr;
 }
 
