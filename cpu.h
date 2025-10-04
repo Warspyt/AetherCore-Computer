@@ -45,6 +45,7 @@ enum CPU_FLAG {
 void run(CPU *cpu, uint8_t *MEM);
 uint64_t make_instr_I(uint16_t opcode, uint8_t rd, uint32_t imm);
 uint64_t make_instr_R(uint16_t opcode, uint8_t rd, uint8_t rs, uint8_t rt);
+uint64_t make_instr_B(uint16_t opcode, uint32_t imm);
 bool read_flag(CPU *cpu, enum CPU_FLAG f);
 void set_flag(CPU *cpu, enum CPU_FLAG f);
 void reset_flags(CPU *cpu);
