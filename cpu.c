@@ -39,12 +39,45 @@ void run(CPU *cpu, uint8_t *MEM) {
                 }
 
                 break;
+            case OPCODE_BR:
+                cpu->PC += 8 * imm - 8;  // corregir desplazamiento por el fetch
+                break;
             case OPCODE_BRNEG:
                 // TODO: add error handling in case the PC ends in an invalid memory address (negative or bigger than
                 // the machine's memory)
                 if (read_flag(cpu, NEGATIVE_FLAG)) {
-                    cpu->PC += 8 * imm;
+                    cpu->PC += 8 * imm - 8;
                 }
+                break;
+            case OPCODE_BRZERO:
+                if(read_flag(cpu, ZERO_FLAG)){
+                    cpu->PC += 8 * imm - 8;
+                }
+                break;
+            case OPCODE_CMP:
+                cpu->REG[rd] = cpu->REG[rs] - cpu->REG[rt];
+
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) {
+                    set_flag(cpu, NEGATIVE_FLAG);
+                } else if (cpu->REG[rd] == 0) {
+                    set_flag(cpu, ZERO_FLAG);
+                }
+                break;
+            case OPCODE_INC:
+                cpu->REG[rd] += 1;
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
+                break;
+            case OPCODE_DEC:
+                cpu->REG[rd] -= 1;
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
+                break;
+            case OPCODE_NOP:
+                // No operation
                 break;
             case OPCODE_HALT:
                 printf("HALT alcanzado.\n");

@@ -21,9 +21,18 @@
 #define OPCODE_MULTF 0x22 // Not implemented yet
 #define OPCODE_DIVF  0x23 // Not implemented yet
 // Branch instructions
-#define OPCODE_BRNEG 0x30
+#define OPCODE_BR     0x30
+#define OPCODE_BRNEG 0x31
+#define OPCODE_BRZERO 0x32
+// Compare instructions
+#define OPCODE_CMP    0x40
+//Increment and decrement
+#define OPCODE_INC    0x50
+#define OPCODE_DEC    0x51
 
+#define OPCODE_NOP    0x00
 #define OPCODE_HALT  0xFF
+
 
 // CPU
 typedef struct {
