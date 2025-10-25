@@ -24,11 +24,20 @@
 #define OPCODE_BR     0x30
 #define OPCODE_BRNEG 0x31
 #define OPCODE_BRZERO 0x32
+#define OPCODE_BREQ  0x33
+#define OPCODE_BRLT  0x34
+#define OPCODE_BRLE  0x35
+#define OPCODE_BRGT  0x36
+#define OPCODE_BRGE  0x37
 // Compare instructions
 #define OPCODE_CMP    0x40
 //Increment and decrement
 #define OPCODE_INC    0x50
 #define OPCODE_DEC    0x51
+// Logical operations
+#define OPCODE_AND   0x60
+#define OPCODE_OR    0x61
+#define OPCODE_NOT   0x62
 
 #define OPCODE_NOP    0x00
 #define OPCODE_HALT  0xFF
