@@ -15,6 +15,8 @@ uint64_t assemble_line(char *line) {
             return make_instr_R(OPCODE_ADD, rd, rs, rt);
         else if (strcmp(instr, "SUB") == 0)
             return make_instr_R(OPCODE_SUB, rd, rs, rt);
+        else if (strcmp(instr, "CMP") == 0)
+            return make_instr_R(OPCODE_CMP, rd, rs, rt);
     } 
     else if (sscanf(line, "%s %d %d", instr, &rd, &imm) == 3) {
         if (strcmp(instr, "LOADI") == 0)
@@ -22,14 +24,23 @@ uint64_t assemble_line(char *line) {
         else if (strcmp(instr, "MOV") == 0)
             return make_instr_R(OPCODE_MOV, rd, imm, 0);
     }
-    else if (sscanf(line, "%s %d", instr, &imm) == 2) {
-        if (strcmp(instr, "BRNEG") == 0) {
+     else if (sscanf(line, "%s %d", instr, &imm) == 2) {
+        if (strcmp(instr, "INC") == 0)
+            return make_instr_I(OPCODE_INC, imm, 0);
+        else if (strcmp(instr, "DEC") == 0)
+            return make_instr_I(OPCODE_DEC, imm, 0);
+        else if (strcmp(instr, "BRNEG") == 0) 
             return make_instr_B(OPCODE_BRNEG, imm);
-        }
+        else if (strcmp(instr, "BRZERO") == 0)
+            return make_instr_B(OPCODE_BRZERO, imm);
+        else if (strcmp(instr, "BR") == 0)
+            return make_instr_B(OPCODE_BR, imm);
     }
     else if (sscanf(line, "%s", instr) == 1) {
         if (strcmp(instr, "HALT") == 0)
             return make_instr_I(OPCODE_HALT, 0, 0);
+        else if (strcmp(instr, "NOP") == 0)
+            return make_instr_I(OPCODE_NOP, 0, 0);
     }
 
     printf("Instrucción inválida: %s\n", line);
