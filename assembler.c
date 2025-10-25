@@ -17,12 +17,18 @@ uint64_t assemble_line(char *line) {
             return make_instr_R(OPCODE_SUB, rd, rs, rt);
         else if (strcmp(instr, "CMP") == 0)
             return make_instr_R(OPCODE_CMP, rd, rs, rt);
+	else if (strcmp(instr, "AND") == 0)
+            return make_instr_R(OPCODE_AND, rd, rs, rt);
+        else if (strcmp(instr, "OR") == 0)
+            return make_instr_R(OPCODE_OR, rd, rs, rt);
     } 
     else if (sscanf(line, "%s %d %d", instr, &rd, &imm) == 3) {
         if (strcmp(instr, "LOADI") == 0)
             return make_instr_I(OPCODE_LOADI, rd, imm);
         else if (strcmp(instr, "MOV") == 0)
             return make_instr_R(OPCODE_MOV, rd, imm, 0);
+    	else if (strcmp(instr, "NOT") == 0)
+            return make_instr_R(OPCODE_NOT, rd, rs, 0);
     }
      else if (sscanf(line, "%s %d", instr, &imm) == 2) {
         if (strcmp(instr, "INC") == 0)
@@ -35,6 +41,16 @@ uint64_t assemble_line(char *line) {
             return make_instr_B(OPCODE_BRZERO, imm);
         else if (strcmp(instr, "BR") == 0)
             return make_instr_B(OPCODE_BR, imm);
+        else if (strcmp(instr, "BREQ") == 0)
+            return make_instr_B(OPCODE_BREQ, imm);
+        else if (strcmp(instr, "BRLT") == 0)
+            return make_instr_B(OPCODE_BRLT, imm);
+        else if (strcmp(instr, "BRLE") == 0)
+            return make_instr_B(OPCODE_BRLE, imm);
+        else if (strcmp(instr, "BRGT") == 0)
+            return make_instr_B(OPCODE_BRGT, imm);
+        else if (strcmp(instr, "BRGE") == 0)
+            return make_instr_B(OPCODE_BRGE, imm);
     }
     else if (sscanf(line, "%s", instr) == 1) {
         if (strcmp(instr, "HALT") == 0)
