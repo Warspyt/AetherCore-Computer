@@ -54,7 +54,31 @@ void run(CPU *cpu, uint8_t *MEM) {
                     cpu->PC += 8 * imm - 8;
                 }
                 break;
-            case OPCODE_CMP:
+	    case OPCODE_BREQ:
+                if (read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRLT:
+                if (read_flag(cpu, NEGATIVE_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRLE:
+                if (read_flag(cpu, NEGATIVE_FLAG) || read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRGT:
+                if (!read_flag(cpu, NEGATIVE_FLAG) && !read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRGE:
+                if (!read_flag(cpu, NEGATIVE_FLAG) || read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+	    case OPCODE_CMP:
                 cpu->REG[rd] = cpu->REG[rs] - cpu->REG[rt];
 
                 reset_flags(cpu);
@@ -88,11 +112,12 @@ void run(CPU *cpu, uint8_t *MEM) {
         }
 
         // Mostrar estado de la CPU
-        printf("PC=%llu | R0=%lld R1=%lld R2=%lld | Z=%d N=%d C=%d V=%d\n",
+        printf("PC=%llu | R0=%lld R1=%lld R2=%lld R3=%lld | Z=%d N=%d C=%d V=%d\n",
                (long long)cpu->PC,
                (long long)cpu->REG[0],
                (long long)cpu->REG[1],
                (long long)cpu->REG[2],
+	       (long long)cpu->REG[3],
                (int)read_flag(cpu, ZERO_FLAG),
                (int)read_flag(cpu, NEGATIVE_FLAG),
                (int)read_flag(cpu, CARRY_FLAG),
