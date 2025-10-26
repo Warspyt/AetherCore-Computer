@@ -37,7 +37,22 @@ void run(CPU *cpu, uint8_t *MEM) {
                 } else if (cpu->REG[rd] == 0) {
                     set_flag(cpu, ZERO_FLAG);
                 }
-
+                break;
+            case OPCODE_MULT:
+                cpu->REG[rd] = cpu->REG[rs] * cpu->REG[rt];
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
+                break;
+            case OPCODE_DIV:
+                if (cpu->REG[rt] == 0) {
+                    printf("Error: División por cero\n");
+                    return;
+                }
+                cpu->REG[rd] = cpu->REG[rs] / cpu->REG[rt];
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
                 break;
             case OPCODE_BR:
                 cpu->PC += 8 * imm - 8;  // corregir desplazamiento por el fetch
@@ -54,7 +69,7 @@ void run(CPU *cpu, uint8_t *MEM) {
                     cpu->PC += 8 * imm - 8;
                 }
                 break;
-	    case OPCODE_BREQ:
+	        case OPCODE_BREQ:
                 if (read_flag(cpu, ZERO_FLAG))
                     cpu->PC += 8 * imm - 8;
                 break;
@@ -78,7 +93,7 @@ void run(CPU *cpu, uint8_t *MEM) {
                 if (!read_flag(cpu, NEGATIVE_FLAG) || read_flag(cpu, ZERO_FLAG))
                     cpu->PC += 8 * imm - 8;
                 break;
-	    case OPCODE_CMP:
+	        case OPCODE_CMP:
                 cpu->REG[rd] = cpu->REG[rs] - cpu->REG[rt];
 
                 reset_flags(cpu);
