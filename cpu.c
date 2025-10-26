@@ -93,13 +93,12 @@ void run(CPU *cpu, uint8_t *MEM) {
                 if (!read_flag(cpu, NEGATIVE_FLAG) || read_flag(cpu, ZERO_FLAG))
                     cpu->PC += 8 * imm - 8;
                 break;
-	        case OPCODE_CMP:
-                cpu->REG[rd] = cpu->REG[rs] - cpu->REG[rt];
-
+	        case OPCODE_CMP: 
+                int64_t result = cpu->REG[rs] - cpu->REG[rt];
                 reset_flags(cpu);
-                if (cpu->REG[rd] < 0) {
+                if (result < 0) {
                     set_flag(cpu, NEGATIVE_FLAG);
-                } else if (cpu->REG[rd] == 0) {
+                } else if (result == 0) {
                     set_flag(cpu, ZERO_FLAG);
                 }
                 break;

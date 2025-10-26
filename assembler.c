@@ -15,8 +15,6 @@ uint64_t assemble_line(char *line) {
             return make_instr_R(OPCODE_ADD, rd, rs, rt);
         else if (strcmp(instr, "SUB") == 0)
             return make_instr_R(OPCODE_SUB, rd, rs, rt);
-        else if (strcmp(instr, "CMP") == 0)
-            return make_instr_R(OPCODE_CMP, rd, rs, rt);
 	    else if (strcmp(instr, "AND") == 0)
             return make_instr_R(OPCODE_AND, rd, rs, rt);
         else if (strcmp(instr, "OR") == 0)
@@ -33,6 +31,8 @@ uint64_t assemble_line(char *line) {
             return make_instr_R(OPCODE_MOV, rd, imm, 0);
     	else if (strcmp(instr, "NOT") == 0)
             return make_instr_R(OPCODE_NOT, rd, rs, 0);
+        else if (strcmp(instr, "CMP") == 0)
+            return make_instr_R(OPCODE_CMP, 0, rd, imm); 
     }
      else if (sscanf(line, "%s %d", instr, &imm) == 2) {
         if (strcmp(instr, "INC") == 0)
