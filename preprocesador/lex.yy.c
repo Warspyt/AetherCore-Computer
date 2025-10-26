@@ -1705,9 +1705,11 @@ void add_define(const char *name, const char *value) {
         return;
     }
     
-    /* Check if already defined - update it */
+    /* Check if already defined - update it with warning */
     for (int i = 0; i < define_count; i++) {
         if (strcmp(defines[i].name, name) == 0) {
+            fprintf(stderr, "Warning: '%s' redefined (was '%s', now '%s')\n", 
+                    name, defines[i].value, value);
             strncpy(defines[i].value, value, MAX_VALUE_LEN - 1);
             defines[i].value[MAX_VALUE_LEN - 1] = '\0';
             return;
