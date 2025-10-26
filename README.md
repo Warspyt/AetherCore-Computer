@@ -17,7 +17,7 @@ y generamos el programa binario (llamémoslo program.bin) con
 ## Ejecutar simulacion del computador
 Primero nos aseguramos de tener compilado el ejecutable del computador con el comando
 ```sh
-gcc AetherComputer.c cpu.c memory.c loader.c -o AetherComputer
+gcc AetherComputer.c cpu.c memory.c -o AetherComputer
 ```
 Y ahora lo ejecutamos con el siguiente comando
 ```sh
