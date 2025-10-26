@@ -17,10 +17,14 @@ uint64_t assemble_line(char *line) {
             return make_instr_R(OPCODE_SUB, rd, rs, rt);
         else if (strcmp(instr, "CMP") == 0)
             return make_instr_R(OPCODE_CMP, rd, rs, rt);
-	else if (strcmp(instr, "AND") == 0)
+	    else if (strcmp(instr, "AND") == 0)
             return make_instr_R(OPCODE_AND, rd, rs, rt);
         else if (strcmp(instr, "OR") == 0)
             return make_instr_R(OPCODE_OR, rd, rs, rt);
+        else if (strcmp(instr, "MULT") == 0)
+            return make_instr_R(OPCODE_MULT, rd, rs, rt);
+        else if (strcmp(instr, "DIV") == 0)
+            return make_instr_R(OPCODE_DIV, rd, rs, rt);
     } 
     else if (sscanf(line, "%s %d %d", instr, &rd, &imm) == 3) {
         if (strcmp(instr, "LOADI") == 0)
