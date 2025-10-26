@@ -58,6 +58,3 @@ dkms.conf
 *.bin
 AetherComputer
 assembler
-
-# Windows srcipts
-*.ps1
