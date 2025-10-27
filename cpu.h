@@ -34,10 +34,16 @@
 //Increment and decrement
 #define OPCODE_INC    0x50
 #define OPCODE_DEC    0x51
+// Memory operations
+#define OPCODE_LOAD   0x60  // Cargar de memoria a registro
+#define OPCODE_STORE  0x61  // Almacenar de registro a memoria
+#define OPCODE_LOADA  0x62  // Cargar dirección (Load Address)
+#define OPCODE_LOADR  0x63  // Load usando registro como dirección
+#define OPCODE_STORER 0x64  // Store usando registro como dirección
 // Logical operations
-#define OPCODE_AND   0x60
-#define OPCODE_OR    0x61
-#define OPCODE_NOT   0x62
+#define OPCODE_AND   0x70
+#define OPCODE_OR    0x71
+#define OPCODE_NOT   0x72
 
 #define OPCODE_NOP    0x00
 #define OPCODE_HALT  0xFF

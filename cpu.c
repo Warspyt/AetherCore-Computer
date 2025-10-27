@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <inttypes.h>
 #include "cpu.h"
 
 void run(CPU *cpu, uint8_t *MEM) {
@@ -102,6 +103,57 @@ void run(CPU *cpu, uint8_t *MEM) {
                     set_flag(cpu, ZERO_FLAG);
                 }
                 break;
+            case OPCODE_LOAD: {
+                // LOAD rd, addr
+                // Carga el valor de la dirección de memoria 'addr' en el registro rd
+                if (imm < 0 || imm >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %d\n", imm);
+                    return;
+                }
+                memcpy(&cpu->REG[rd], &MEM[imm], sizeof(int64_t));
+                break;
+            }
+
+            case OPCODE_STORE: {
+                // STORE rs, addr
+                // Almacena el valor del registro rs en la dirección de memoria 'addr'
+                if (imm < 0 || imm >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %d\n", imm);
+                    return;
+                }
+                memcpy(&MEM[imm], &cpu->REG[rd], sizeof(int64_t));
+                break;
+            }
+
+            case OPCODE_LOADA: {
+                // LOADA rd, addr
+                // Carga la dirección 'addr' en el registro rd
+                cpu->REG[rd] = imm;
+                break;
+            }
+            case OPCODE_LOADR: {
+                // LOADR rd, rs
+                // Carga desde la dirección contenida en rs al registro rd
+                int64_t addr = cpu->REG[rs];
+                if (addr < 0 || addr >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %" PRId64 "\n", addr);
+                    return;
+                }
+                memcpy(&cpu->REG[rd], &MEM[addr], sizeof(int64_t));
+                break;
+            }
+
+            case OPCODE_STORER: {
+                // STORER rd, rs
+                // Almacena rd en la dirección contenida en rs
+                int64_t addr = cpu->REG[rs];
+                if (addr < 0 || addr >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %" PRId64 "\n", addr);
+                    return;
+                }
+                memcpy(&MEM[addr], &cpu->REG[rd], sizeof(int64_t));
+                break;
+            }                                                                                   
             case OPCODE_INC:
                 cpu->REG[rd] += 1;
                 reset_flags(cpu);
