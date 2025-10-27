@@ -33,6 +33,16 @@ uint64_t assemble_line(char *line) {
             return make_instr_R(OPCODE_NOT, rd, rs, 0);
         else if (strcmp(instr, "CMP") == 0)
             return make_instr_R(OPCODE_CMP, 0, rd, imm); 
+        else if (strcmp(instr, "LOAD") == 0)
+            return make_instr_I(OPCODE_LOAD, rd, imm);
+        else if (strcmp(instr, "STORE") == 0)
+            return make_instr_I(OPCODE_STORE, rd, imm);
+        else if (strcmp(instr, "LOADA") == 0)
+            return make_instr_I(OPCODE_LOADA, rd, imm);
+        else if (strcmp(instr, "LOADR") == 0)
+            return make_instr_R(OPCODE_LOADR, rd, rs, 0);
+        else if (strcmp(instr, "STORER") == 0)
+            return make_instr_R(OPCODE_STORER, rd, rs, 0);
     }
      else if (sscanf(line, "%s %d", instr, &imm) == 2) {
         if (strcmp(instr, "INC") == 0)
