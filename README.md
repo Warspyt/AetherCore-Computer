@@ -25,3 +25,32 @@ Y ahora lo ejecutamos con el siguiente comando
 ```
 Por ahora el computador ejecutará el programa binario con nombre program.bin tan pronto
 como inicie.
+
+## Ejecución Analizador léxico
+
+Es necesario tener instalado FLEX
+- En Ubuntu/Debian
+sudo apt-get install flex
+
+- En macOS
+brew install flex
+
+- En Fedora/RHEL
+sudo dnf install flex
+
+Generar el código C desde el archivo Flex
+```sh
+flex lexer.l
+```
+→ crea: lex.yy.c
+
+Compilar el código generado
+```sh
+gcc lex.yy.c main.c -o lexer -lfl
+```
+→ crea: lexer (ejecutable)
+
+Ejecución:
+```sh
+./lexer test_lexer.txt
+```
