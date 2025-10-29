@@ -54,3 +54,40 @@ Ejecución:
 ```sh
 ./lexer test_lexer.txt
 ```
+
+## Ejecución Ensamblador y Cargador en Flex
+
+Generar el código C desde el archivo Flex
+```sh
+flex assembler.l
+```
+→ crea: lex.yy.c
+
+Compilar el código generado
+```sh
+gcc lex.yy.c assembler -o assembler -lfl
+```
+→ crea: assembler (ejecutable)
+
+realizar el mismo procedimiento con el código C del cargador desde Flex
+```sh
+flex assembler.l
+gcc lex.yy.c assembler -o assembler -lfl
+```
+→ crea: loader (ejecutable)
+
+Ensamblar el programa a ejecutar
+```sh
+./assembler euclides.asm
+```
+→ crea: program.obj
+
+Cargar el programa en la memoria
+```sh
+./loader
+```
+→ crea: program.bin
+Ejecución:
+```sh
+./AetherComputer
+```
