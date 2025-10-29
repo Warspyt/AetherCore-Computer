@@ -37,6 +37,7 @@ int process_include(const char *filename);
 IDENTIFIER  [a-zA-Z_][a-zA-Z0-9_]*
 WHITESPACE  [ \t]+
 NEWLINE     \n
+FILENAME    [a-zA-Z0-9_./\-]+
 
 %x DEFINE_STATE
 %x DEFINE_VALUE_STATE
@@ -83,21 +84,11 @@ NEWLINE     \n
 
 
 
-    /* Handle #include directive - actually include the file */
-^[ \t]*#include[ \t]*\"([^\"]+)\"[ \t]*\n  {
+    /* Handle #include */
+^{WHITESPACE}*#include{WHITESPACE}\"{FILENAME}\"{WHITESPACE}*{NEWLINE}  {
     char filename[256];
     /* Extract filename from quotes */
     sscanf(yytext, "#include \"%[^\"]\"", filename);
-    
-    if (!process_include(filename)) {
-        fprintf(stderr, "Error: Could not include file '%s'\n", filename);
-    }
-}
-
-^[ \t]*#include[ \t]*\<([^\>]+)\>[ \t]*\n  {
-    char filename[256];
-    /* Extract filename from angle brackets */
-    sscanf(yytext, "#include <%[^>]>", filename);
     
     if (!process_include(filename)) {
         fprintf(stderr, "Error: Could not include file '%s'\n", filename);
