@@ -1,48 +1,57 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 #include "cpu.h"
-
-// Declaración de load_program desde memory.c
-void load_program(uint64_t program[], int n, int base_addr, uint8_t *MEM);
+#include "loader.h"
 
 // Memoria global
 uint8_t MEM[MEM_SIZE];
 
-// Función para cargar un archivo binario en memoria
-int load_from_file(const char *filename, uint8_t *MEM, int base_addr) {
-    FILE *f = fopen(filename, "rb");
-    if (!f) {
-        perror("Error al abrir el archivo");
-        return -1;
+int main(int argc, char *argv[]) {
+    CPU cpu;
+    ProgramInfo prog_info;
+    
+    // Dirección base configurable (por defecto 0x00100000)
+    uint32_t base_addr = 0x00100000;
+    const char *filename = "program.bin";
+    
+    // Permitir especificar archivo y dirección por línea de comandos
+    if (argc > 1) {
+        filename = argv[1];
     }
-
-    int addr = base_addr;
-    size_t bytes_read;
-    uint64_t instr;
-
-    while ((bytes_read = fread(&instr, sizeof(uint64_t), 1, f)) == 1) {
-        memcpy(&MEM[addr], &instr, sizeof(uint64_t));
-        addr += 8;
+    if (argc > 2) {
+        sscanf(argv[2], "%x", &base_addr);
     }
-
-    fclose(f);
-    return 0;
-}
-
-int main() {
-    CPU cpu = {0};
-    cpu.PC = 0;
-
-    // Cargar programa desde archivo
-    if (load_from_file("program.bin", MEM, 0) != 0) {
+    
+    // FASE 1: CARGA (LOADER)
+    if (loader_load_program(filename, MEM, base_addr, &prog_info) != 0) {
+        fprintf(stderr, "Error al cargar el programa\n");
         return 1;
     }
-
-    // Ejecutar
+    
+    // Mostrar información del programa
+    loader_print_info(&prog_info);
+    
+    // FASE 2: INICIALIZACIÓN
+    if (loader_init_cpu(&cpu, &prog_info) != 0) {
+        fprintf(stderr, "Error al inicializar CPU\n");
+        return 1;
+    }
+    
+    // FASE 3: EJECUCIÓN
+    printf("=== INICIANDO EJECUCIÓN ===\n\n");
     run(&cpu, MEM);
-
-    printf("Resultado final: R0 = %llu\n", (unsigned long long)cpu.REG[0]);
-
+    
+    // FASE 4: RESULTADOS
+    printf("\n=== EJECUCIÓN FINALIZADA ===\n");
+    printf("Resultado final: R0 = %lld\n", (long long)cpu.REG[0]);
+    printf("PC final: 0x%08llX\n", (unsigned long long)cpu.PC);
+    
+    // Leer flags usando las funciones y máscaras correctas
+    printf("Flags: Z=%d N=%d C=%d V=%d\n", 
+           read_flag(&cpu, ZERO_FLAG) ? 1 : 0,
+           read_flag(&cpu, NEGATIVE_FLAG) ? 1 : 0,
+           read_flag(&cpu, CARRY_FLAG) ? 1 : 0,
+           read_flag(&cpu, OVERFLOW_FLAG) ? 1 : 0);
+    
     return 0;
 }
