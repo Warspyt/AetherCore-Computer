@@ -87,6 +87,7 @@ Cargar el programa en la memoria
 ./loader
 ```
 → crea: program.bin
+
 Ejecución:
 ```sh
 ./AetherComputer
