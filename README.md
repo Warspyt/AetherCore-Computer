@@ -71,8 +71,8 @@ gcc lex.yy.c assembler -o assembler -lfl
 
 realizar el mismo procedimiento con el código C del cargador desde Flex
 ```sh
-flex assembler.l
-gcc lex.yy.c assembler -o assembler -lfl
+flex loader.l
+gcc lex.yy.c loader -o loader -lfl
 ```
 → crea: loader (ejecutable)
 
