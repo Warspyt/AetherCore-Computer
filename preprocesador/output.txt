@@ -1,0 +1,6 @@
+
+
+
+int array[100];
+float circle = 2 * 3.14159 * r;
+int minValue = MIN_VALUE;
