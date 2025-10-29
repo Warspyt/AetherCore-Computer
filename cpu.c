@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <inttypes.h>
 #include "cpu.h"
 
 void run(CPU *cpu, uint8_t *MEM) {
@@ -37,14 +38,136 @@ void run(CPU *cpu, uint8_t *MEM) {
                 } else if (cpu->REG[rd] == 0) {
                     set_flag(cpu, ZERO_FLAG);
                 }
-
+                break;
+            case OPCODE_MULT:
+                cpu->REG[rd] = cpu->REG[rs] * cpu->REG[rt];
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
+                break;
+            case OPCODE_DIV:
+                if (cpu->REG[rt] == 0) {
+                    printf("Error: División por cero\n");
+                    return;
+                }
+                cpu->REG[rd] = cpu->REG[rs] / cpu->REG[rt];
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
+                break;
+            case OPCODE_BR:
+                cpu->PC += 8 * imm - 8;  // corregir desplazamiento por el fetch
                 break;
             case OPCODE_BRNEG:
                 // TODO: add error handling in case the PC ends in an invalid memory address (negative or bigger than
                 // the machine's memory)
                 if (read_flag(cpu, NEGATIVE_FLAG)) {
-                    cpu->PC += 8 * imm;
+                    cpu->PC += 8 * imm - 8;
                 }
+                break;
+            case OPCODE_BRZERO:
+                if(read_flag(cpu, ZERO_FLAG)){
+                    cpu->PC += 8 * imm - 8;
+                }
+                break;
+	        case OPCODE_BREQ:
+                if (read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRLT:
+                if (read_flag(cpu, NEGATIVE_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRLE:
+                if (read_flag(cpu, NEGATIVE_FLAG) || read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRGT:
+                if (!read_flag(cpu, NEGATIVE_FLAG) && !read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+
+            case OPCODE_BRGE:
+                if (!read_flag(cpu, NEGATIVE_FLAG) || read_flag(cpu, ZERO_FLAG))
+                    cpu->PC += 8 * imm - 8;
+                break;
+	        case OPCODE_CMP: 
+                int64_t result = cpu->REG[rs] - cpu->REG[rt];
+                reset_flags(cpu);
+                if (result < 0) {
+                    set_flag(cpu, NEGATIVE_FLAG);
+                } else if (result == 0) {
+                    set_flag(cpu, ZERO_FLAG);
+                }
+                break;
+            case OPCODE_LOAD: {
+                // LOAD rd, addr
+                // Carga el valor de la dirección de memoria 'addr' en el registro rd
+                if (imm < 0 || imm >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %d\n", imm);
+                    return;
+                }
+                memcpy(&cpu->REG[rd], &MEM[imm], sizeof(int64_t));
+                break;
+            }
+
+            case OPCODE_STORE: {
+                // STORE rs, addr
+                // Almacena el valor del registro rs en la dirección de memoria 'addr'
+                if (imm < 0 || imm >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %d\n", imm);
+                    return;
+                }
+                memcpy(&MEM[imm], &cpu->REG[rd], sizeof(int64_t));
+                break;
+            }
+
+            case OPCODE_LOADA: {
+                // LOADA rd, addr
+                // Carga la dirección 'addr' en el registro rd
+                cpu->REG[rd] = imm;
+                break;
+            }
+            case OPCODE_LOADR: {
+                // LOADR rd, rs
+                // Carga desde la dirección contenida en rs al registro rd
+                int64_t addr = cpu->REG[rs];
+                if (addr < 0 || addr >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %" PRId64 "\n", addr);
+                    return;
+                }
+                memcpy(&cpu->REG[rd], &MEM[addr], sizeof(int64_t));
+                break;
+            }
+
+            case OPCODE_STORER: {
+                // STORER rd, rs
+                // Almacena rd en la dirección contenida en rs
+                int64_t addr = cpu->REG[rs];
+                if (addr < 0 || addr >= MEM_SIZE) {
+                    printf("Error: Dirección de memoria inválida %" PRId64 "\n", addr);
+                    return;
+                }
+                memcpy(&MEM[addr], &cpu->REG[rd], sizeof(int64_t));
+                break;
+            }                                                                                   
+            case OPCODE_INC:
+                cpu->REG[rd] += 1;
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
+                break;
+            case OPCODE_DEC:
+                cpu->REG[rd] -= 1;
+                reset_flags(cpu);
+                if (cpu->REG[rd] < 0) set_flag(cpu, NEGATIVE_FLAG);
+                else if (cpu->REG[rd] == 0) set_flag(cpu, ZERO_FLAG);
+                break;
+            case OPCODE_NOP:
+                // No operation
                 break;
             case OPCODE_HALT:
                 printf("HALT alcanzado.\n");
@@ -55,11 +178,12 @@ void run(CPU *cpu, uint8_t *MEM) {
         }
 
         // Mostrar estado de la CPU
-        printf("PC=%llu | R0=%lld R1=%lld R2=%lld | Z=%d N=%d C=%d V=%d\n",
+        printf("PC=%llu | R0=%lld R1=%lld R2=%lld R3=%lld | Z=%d N=%d C=%d V=%d\n",
                (long long)cpu->PC,
                (long long)cpu->REG[0],
                (long long)cpu->REG[1],
                (long long)cpu->REG[2],
+	       (long long)cpu->REG[3],
                (int)read_flag(cpu, ZERO_FLAG),
                (int)read_flag(cpu, NEGATIVE_FLAG),
                (int)read_flag(cpu, CARRY_FLAG),
