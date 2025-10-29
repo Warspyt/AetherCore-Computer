@@ -45,7 +45,7 @@ FILENAME    [a-zA-Z0-9_./\-]+
 %%
 
     /* Handle #define directive */
-^[ \t]*#define{WHITESPACE}  { BEGIN(DEFINE_STATE); }
+^{WHITESPACE}*#define{WHITESPACE}  { BEGIN(DEFINE_STATE); }
 
 <DEFINE_STATE>{IDENTIFIER}  {
     /* Store the identifier name temporarily */
