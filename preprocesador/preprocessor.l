@@ -40,7 +40,6 @@ NEWLINE     \n
 FILENAME    [a-zA-Z0-9_./\-]+
 
 %x DEFINE_STATE
-%x DEFINE_VALUE_STATE
 
 %%
 
