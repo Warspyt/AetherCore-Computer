@@ -1,24 +1,10 @@
-// Declaración variables
-int x = 42;
-float pi = 3.14159;
-string name = "Alice";
-
-// Estructuras de control
-if (x > 0) {
-    write("Positive");
+function maxcd(a : int, b : int) : int {
+while ( a != b) {
+if (a > b) {
+a = a - b;
+} else if (a < b){
+b = b - a;
 }
-
-// Funciones
-function int add(int a, int b) {
-    return a + b;
 }
-
-fun maxcd (a, b : entero) dev (m : entero) 
-mientras a != b hacer 
-caso a>b -> a:= a-b 
-     a<b -> b:=b-a 
-fcaso 
-
-fmientras ; 
-dev a 
-ffun 
+return a;
+}
